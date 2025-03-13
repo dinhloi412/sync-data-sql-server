@@ -18,7 +18,7 @@ class ApiClient:
             return False
         if not api_url:
             api_url = self.config["API"]["url"]
-        headers = {"Content-Type": "application/json", "Api-Key": f'Bearer {self.config["API"]["api_token"]}'}
+        headers = {"Content-Type": "application/json", "Api-Key": self.config["API"]["api_token"]}
         agent_name = self.config["API"]["agent_name"]
         serializable_data = []
 
@@ -52,10 +52,15 @@ class ApiClient:
         for attempt in range(retry_count):
             try:
                 response = requests.post(api_url, headers=headers, data=json_data_str)
+                # convert response to json
 
                 if response.status_code == 200:
-                    self.logger.info(f"Sync successful. Status code: {response.status_code}")
-                    return True
+                    res = response.json()
+                    success = res["result"]["success"]
+                    if success:
+                        self.logger.info(f"Sync successful. Status code: {response.status_code}")
+                        return True
+                    raise Exception(f"Sync failed. {res['result']['error']}")
                 else:
                     self.logger.error(f"Sync failed. Status code: {response.status_code}, Response: {response.text}")
                     if attempt < retry_count - 1:
