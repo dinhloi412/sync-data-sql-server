@@ -18,7 +18,7 @@ class ApiClient:
             return False
         if not api_url:
             api_url = self.config["API"]["url"]
-        headers = {"Content-Type": "application/json", "Authorization": f'Bearer {self.config["API"]["api_token"]}'}
+        headers = {"Content-Type": "application/json", "Api-Key": f'Bearer {self.config["API"]["api_token"]}'}
         agent_name = self.config["API"]["agent_name"]
         serializable_data = []
 
