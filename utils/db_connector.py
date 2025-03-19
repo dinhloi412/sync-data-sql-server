@@ -20,10 +20,24 @@ class DatabaseConnector:
         driver = self.config["DATABASE"].get("driver", "ODBC Driver 17 for SQL Server")
 
         if username and password:
-            connection_string = f"DRIVER={{{driver}}};" f"SERVER={server};" f"DATABASE={database};" f"UID={username};" f"PWD={password}"
+            connection_string = (
+                f"DRIVER={{{driver}}};"
+                    f"SERVER={server};"
+                    f"DATABASE={database};"
+                    f"UID={username};"
+                    f"PWD={password};"
+                    "Encrypt=yes;"
+                    "TrustServerCertificate=yes;"
+                )
         else:
-            connection_string = f"DRIVER={{{driver}}};" f"SERVER={server};" f"DATABASE={database};" "Trusted_Connection=yes"
-
+            connection_string = (
+                    f"DRIVER={{{driver}}};"
+                    f"SERVER={server};"
+                    f"DATABASE={database};"
+                    "Trusted_Connection=yes;"
+                    "Encrypt=yes;"
+                    "TrustServerCertificate=yes;"
+                )
         return pyodbc.connect(connection_string)
 
     def get_data(self, from_date=None):
